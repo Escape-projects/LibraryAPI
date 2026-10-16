@@ -22,7 +22,8 @@ builder.Services.AddScoped<IAuthClientService, AuthClientService>();
 builder.Services.AddScoped<IBookClientService, BookClientService>();
 builder.Services.AddScoped<IAuthorClientService, AuthorClientService>();
 
-builder.Services.AddHttpClient<ApiClient>(client => client.BaseAddress = new Uri("https://localhost:7119/"))
+var apiBaseUrl = builder.Configuration["Api:BaseUrl"] ?? throw new InvalidOperationException("Api:BaseUrl is not configured");
+builder.Services.AddHttpClient<ApiClient>(client => client.BaseAddress = new Uri(apiBaseUrl))
     .AddHttpMessageHandler<AuthHeaderHandler>().AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(3, attempt => TimeSpan.FromSeconds(attempt)));
 
 var host = builder.Build();

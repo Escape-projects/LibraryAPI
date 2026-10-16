@@ -50,7 +50,6 @@ try
     builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
     builder.Services.AddProblemDetails();
 
-    //builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
     builder.Services.AddOptions<JwtSettings>().Bind(builder.Configuration.GetSection("JwtSettings"))
     .Validate(settings => !string.IsNullOrWhiteSpace(settings.SecretKey), "JwtSettings:SecretKey is not configured. Locally: user-secrets. In Docker: JwtSettings__SecretKey.")
     .Validate(settings => settings.SecretKey.Length >= 32, "JwtSettings:SecretKey must be at least 32 characters (256 bits for HMAC-SHA256).")
@@ -59,7 +58,6 @@ try
     builder.Services.AddScoped<IJwtService, JwtService>();
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
     {
-        //var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
         var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>() ?? throw new InvalidOperationException("JwtSettings section is missing in configuration.");
         options.TokenValidationParameters = new TokenValidationParameters
         {
