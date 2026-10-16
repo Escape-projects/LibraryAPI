@@ -1,5 +1,5 @@
 ﻿using LibraryAPI.Models;
-using LibraryAPI.Services;
+using LibraryAPI.Services.Jwt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;

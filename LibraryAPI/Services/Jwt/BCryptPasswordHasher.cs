@@ -1,6 +1,6 @@
 ﻿using BC = BCrypt.Net.BCrypt;
 
-namespace LibraryAPI.Services
+namespace LibraryAPI.Services.Jwt
 {
     public class BCryptPasswordHasher : IPasswordHasher
     {

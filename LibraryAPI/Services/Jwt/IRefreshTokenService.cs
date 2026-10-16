@@ -1,6 +1,6 @@
 ﻿using LibraryAPI.Models;
 
-namespace LibraryAPI.Services
+namespace LibraryAPI.Services.Jwt
 {
     public interface IRefreshTokenService
     {

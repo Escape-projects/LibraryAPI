@@ -1,7 +1,7 @@
 ﻿using LibraryAPI.Contracts.DTOs.Account;
 using LibraryAPI.Contracts.DTOs.Common;
 
-namespace LibraryAPI.Services
+namespace LibraryAPI.Services.API
 {
     public interface IAccountService
     {

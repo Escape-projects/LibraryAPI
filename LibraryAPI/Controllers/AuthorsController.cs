@@ -1,5 +1,5 @@
 ﻿using LibraryAPI.Contracts.DTOs.Author;
-using LibraryAPI.Services;
+using LibraryAPI.Services.API;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

@@ -3,9 +3,10 @@ using LibraryAPI.Contracts.DTOs.Book;
 using LibraryAPI.Contracts.DTOs.Common;
 using LibraryAPI.Exceptions;
 using LibraryAPI.Models;
+using LibraryAPI.Services.Redis;
 using Microsoft.EntityFrameworkCore;
 
-namespace LibraryAPI.Services
+namespace LibraryAPI.Services.API
 {
     public class BookService : IBookService
     {
@@ -69,7 +70,7 @@ namespace LibraryAPI.Services
 
         public async Task<BookDTO> GetBookAsync(int id)
         {
-            var cacheKey = $"book:{id}";
+            var cacheKey = $"books:id={id}";
             var cached = await cache.GetAsync<BookDTO>(cacheKey);
             if (cached != null)
             {
@@ -96,6 +97,7 @@ namespace LibraryAPI.Services
             library.Books.Add(book);
             await library.SaveChangesAsync();
             await cache.RemoveByPrefixAsync("books:");
+            await cache.RemoveByPrefixAsync("authors:");
 
             logger.LogInformation("Book(id:{BookId}) created", book.id);
             return mapper.Map<BookDTO>(book);
@@ -112,9 +114,8 @@ namespace LibraryAPI.Services
             book.year = updateBook.year;
             book.authorId = updateBook.authorId;
             await library.SaveChangesAsync();
-
             await cache.RemoveByPrefixAsync("books:");
-            await cache.RemoveAsync($"book:{id}");
+            await cache.RemoveByPrefixAsync("authors:");
 
             logger.LogInformation("Book(id:{BookId}) updated", book.id);
         }
@@ -127,9 +128,8 @@ namespace LibraryAPI.Services
             if (book == null) throw new NotFoundException($"Book(id:{id}) not found");
             library.Books.Remove(book);
             await library.SaveChangesAsync();
-
             await cache.RemoveByPrefixAsync("books:");
-            await cache.RemoveAsync($"book:{id}");
+            await cache.RemoveByPrefixAsync("authors:");
 
             logger.LogInformation("Book(id:{BookId}) deleted", id);
         }

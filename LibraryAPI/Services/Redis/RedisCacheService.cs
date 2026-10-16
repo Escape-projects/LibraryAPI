@@ -1,7 +1,7 @@
 ﻿using StackExchange.Redis;
 using System.Text.Json;
 
-namespace LibraryAPI.Services
+namespace LibraryAPI.Services.Redis
 {
     public class RedisCacheService : ICacheService
     {
@@ -52,26 +52,6 @@ namespace LibraryAPI.Services
                 var db = redis.GetDatabase();
                 var json = JsonSerializer.Serialize(value, jsonOptions);
                 await db.StringSetAsync(key, json, ttl ?? TimeSpan.FromMinutes(5));
-            }
-            catch (Exception ex) when (ex is RedisException or RedisTimeoutException)
-            {
-                cacheDisabledUntil = DateTime.UtcNow + DisablePeriod;
-                logger.LogWarning(ex, "Redis unavailable, cache disabled for {Seconds}s", DisablePeriod.TotalSeconds);
-            }
-            catch (Exception ex)
-            {
-                logger.LogWarning(ex, "Cache error for key {Key}", key);
-            }
-        }
-
-        public async Task RemoveAsync(string key)
-        {
-            try
-            {
-                if (DateTime.UtcNow < cacheDisabledUntil) { logger.LogInformation("Cache skipped (disabled until {Until:HH:mm:ss})", cacheDisabledUntil); return; }
-
-                var db = redis.GetDatabase();
-                await db.KeyDeleteAsync(key);
             }
             catch (Exception ex) when (ex is RedisException or RedisTimeoutException)
             {

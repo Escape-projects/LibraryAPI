@@ -2,9 +2,10 @@
 using LibraryAPI.Contracts.DTOs.Auth;
 using LibraryAPI.Exceptions;
 using LibraryAPI.Models;
+using LibraryAPI.Services.Jwt;
 using Microsoft.EntityFrameworkCore;
 
-namespace LibraryAPI.Services
+namespace LibraryAPI.Services.API
 {
     public class AuthService : IAuthService
     {

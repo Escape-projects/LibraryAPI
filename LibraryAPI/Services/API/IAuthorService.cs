@@ -1,7 +1,7 @@
 ﻿using LibraryAPI.Contracts.DTOs.Author;
 using LibraryAPI.Contracts.DTOs.Common;
 
-namespace LibraryAPI.Services
+namespace LibraryAPI.Services.API
 {
     public interface IAuthorService
     {

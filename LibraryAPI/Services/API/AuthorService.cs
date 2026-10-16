@@ -3,9 +3,10 @@ using LibraryAPI.Contracts.DTOs.Author;
 using LibraryAPI.Contracts.DTOs.Common;
 using LibraryAPI.Exceptions;
 using LibraryAPI.Models;
+using LibraryAPI.Services.Redis;
 using Microsoft.EntityFrameworkCore;
 
-namespace LibraryAPI.Services
+namespace LibraryAPI.Services.API
 {
     public class AuthorService : IAuthorService
     {
@@ -66,7 +67,7 @@ namespace LibraryAPI.Services
 
         public async Task<AuthorDTO> GetAuthorAsync(int id)
         {
-            var cacheKey = $"author:{id}";
+            var cacheKey = $"authors:id={id}";
             var cached = await cache.GetAsync<AuthorDTO>(cacheKey);
             if (cached != null)
             {
@@ -86,7 +87,7 @@ namespace LibraryAPI.Services
 
         public async Task<AuthorDTO> GetAuthorAsync(string name)
         {
-            var cacheKey = $"author:{name}";
+            var cacheKey = $"authors:name={name}";
             var cached = await cache.GetAsync<AuthorDTO>(cacheKey);
             if (cached != null)
             {
@@ -111,6 +112,7 @@ namespace LibraryAPI.Services
             var author = new Author { name = newAuthor.name, country = newAuthor.country };
             library.Authors.Add(author);
             await library.SaveChangesAsync();
+            await cache.RemoveByPrefixAsync("books:");
             await cache.RemoveByPrefixAsync("authors:");
 
             logger.LogInformation("Author(id:{AuthorId}) created", author.id);
@@ -123,15 +125,11 @@ namespace LibraryAPI.Services
 
             var author = await library.Authors.FirstOrDefaultAsync(author => author.id == id);
             if (author == null) throw new NotFoundException($"Author(id:{id}) not found");
-            var oldName = author.name;
             author.name = updateAuthor.name;
             author.country = updateAuthor.country;
             await library.SaveChangesAsync();
-            await cache.RemoveByPrefixAsync("authors:");
             await cache.RemoveByPrefixAsync("books:");
-            await cache.RemoveAsync($"author:{oldName}");
-            var authorDTO = mapper.Map<AuthorDTO>(author);
-            await cache.SetAsync($"author:{id}", authorDTO, TimeSpan.FromMinutes(10));
+            await cache.RemoveByPrefixAsync("authors:");
 
             logger.LogInformation("Author(id:{AuthorId}) updated", id);
         }
@@ -145,9 +143,8 @@ namespace LibraryAPI.Services
             if (author.books.Count > 0) throw new ConflictException($"Author(id:{id} has books)");
             library.Authors.Remove(author);
             await library.SaveChangesAsync();
+            await cache.RemoveByPrefixAsync("books:");
             await cache.RemoveByPrefixAsync("authors:");
-            await cache.RemoveAsync($"author:{id}");
-            await cache.RemoveAsync($"author:{author.name}");
 
             logger.LogInformation("Author(id:{AuthorId}) deleted", id);
         }

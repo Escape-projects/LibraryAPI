@@ -1,5 +1,5 @@
 ﻿using LibraryAPI.Contracts.DTOs.Auth;
-using LibraryAPI.Services;
+using LibraryAPI.Services.API;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryAPI.Controllers

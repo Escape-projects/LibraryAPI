@@ -1,7 +1,8 @@
 ﻿using LibraryAPI.Contracts.DTOs.Auth;
 using LibraryAPI.Exceptions;
 using LibraryAPI.Models;
-using LibraryAPI.Services;
+using LibraryAPI.Services.API;
+using LibraryAPI.Services.Jwt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;

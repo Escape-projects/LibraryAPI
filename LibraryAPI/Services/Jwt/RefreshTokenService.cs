@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace LibraryAPI.Services
+namespace LibraryAPI.Services.Jwt
 {
     public class RefreshTokenService : IRefreshTokenService
     {
