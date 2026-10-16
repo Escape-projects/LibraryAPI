@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="LibraryAPI.Contracts/LibraryAPI.Contracts.csproj" Id="829ad768-c63b-40f3-ab3e-12145a6426f9" />
+  <Project Path="LibraryAPI.Tests/LibraryAPI.Tests.csproj" Id="e2780a2a-86a8-40e1-9482-359d025d4577" />
+  <Project Path="LibraryAPI/LibraryAPI.csproj" />
+  <Project Path="LibraryClientApp/LibraryClientApp.csproj" Id="cecf50a5-d611-4b60-bd4c-a7ce1861e9cd" />
+  <Project Path="LibraryCorporateApp/LibraryCorporateApp.csproj" />
+</Solution>

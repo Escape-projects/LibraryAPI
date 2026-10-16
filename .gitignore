@@ -1,0 +1,41 @@
+## .NET / Visual Studio
+[Bb]in/
+[Oo]bj/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+artifacts/
+TestResults/
+
+## IDE
+.idea/
+.vscode/
+
+## Логи (сюда пишет Serilog)
+logs/
+*.log
+
+## Секреты и локальные настройки
+.env
+*.env.local
+appsettings.Local.json
+
+## Локальные файлы SQL Server
+*.mdf
+*.ldf
+
+## Docker
+*.tar
+
+## OS
+Thumbs.db
+.DS_Store

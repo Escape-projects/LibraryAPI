@@ -1,0 +1,28 @@
+# Build artifacts
+**/bin/
+**/obj/
+
+# IDE
+**/.vs/
+**/.vscode/
+**/*.user
+
+# Logs
+**/logs/
+**/*.log
+
+# Config
+**/appsettings.Development.json
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+README.md
+
+# Проекты, НЕ нужные в образе API
+LibraryAPI.Tests/
+LibraryCorporateApp/
+LibraryClientApp/
