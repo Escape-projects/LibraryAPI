@@ -3,12 +3,15 @@ using LibraryClientApp.Menus;
 using LibraryClientApp.Middleware;
 using LibraryClientApp.Models;
 using LibraryClientApp.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Polly;
 
 var builder = Host.CreateApplicationBuilder(args);
+builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
+
 builder.Logging.AddFilter("System.Net.Http.HttpClient", LogLevel.Warning);
 builder.Services.AddSingleton<TokenFileStorage>();
 builder.Services.AddSingleton<AppStorage>();

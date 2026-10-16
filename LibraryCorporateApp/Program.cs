@@ -3,6 +3,7 @@ using LibraryCorporateApp.Menus;
 using LibraryCorporateApp.Middleware;
 using LibraryCorporateApp.Models;
 using LibraryCorporateApp.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,8 @@ using Polly;
 using System.Net;
 
 var builder = Host.CreateApplicationBuilder(args);
+builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
+
 builder.Services.AddSingleton<AppStorage>();
 builder.Services.AddTransient<AuthHeaderHandler>();
 builder.Logging.AddFilter("System.Net.Http.HttpClient", LogLevel.Warning);
