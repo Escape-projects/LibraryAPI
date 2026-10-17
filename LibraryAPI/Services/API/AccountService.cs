@@ -14,6 +14,7 @@ namespace LibraryAPI.Services.API
         private readonly IMapper mapper;
         private readonly ILogger<AccountService> logger;
         private readonly IPasswordHasher hasher;
+        private static readonly string[] StaffRoles = { "admin", "librarian" }; 
 
         public AccountService(LibraryContext Library, IMapper Mapper, ILogger<AccountService> Logger, IPasswordHasher passwordHasher)
         {
@@ -26,7 +27,7 @@ namespace LibraryAPI.Services.API
         public async Task<PagedResult<AccountDTO>> GetAccountsAsync(AccountFilterParams filters)
         {
             var query = library.Accounts.AsNoTracking();
-            query = query.Where(account => account.role != "user");
+            query = query.Where(account => StaffRoles.Contains(account.role));
             if (filters.login != null) query = query.Where(account => account.login.Contains(filters.login));
             if (filters.role != null) query = query.Where(account => account.role == filters.role);
             switch (filters.sortBy)
@@ -46,7 +47,7 @@ namespace LibraryAPI.Services.API
 
         public async Task<AccountDTO> GetAccountAsync(int id)
         {
-            var account = await library.Accounts.FirstOrDefaultAsync(account => account.id == id && account.role != "user");
+            var account = await library.Accounts.FirstOrDefaultAsync(account => account.id == id && StaffRoles.Contains(account.role));
             if (account == null) throw new NotFoundException($"Account(id:{id}) not found");
             return mapper.Map<AccountDTO>(account);
         }
@@ -56,7 +57,7 @@ namespace LibraryAPI.Services.API
             logger.LogInformation("Creating account: {Login} ({Role})", newAccount.login, newAccount.role);
 
             if (await library.Accounts.AnyAsync(account => account.login == newAccount.login)) throw new BadRequestException($"Login({newAccount.login}) already taken");
-            var account = new Account { login = newAccount.login, role = newAccount.role, passwordHash = hasher.Hash(newAccount.password) };
+            var account = new Account { login = newAccount.login, role = newAccount.role.ToLowerInvariant(), passwordHash = hasher.Hash(newAccount.password) };
             library.Accounts.Add(account);
             await library.SaveChangesAsync();
 
@@ -69,11 +70,11 @@ namespace LibraryAPI.Services.API
             logger.LogInformation("Updating account(id:{AccountId}): {NewLogin} ({NewRole})", id, updateAccount.login, updateAccount.role);
 
             if (id == currentAccountId && updateAccount.role != "admin") throw new BadRequestException("Cannot demote yourself");
-            var account = await library.Accounts.FirstOrDefaultAsync(account => account.id == id && account.role != "user");
+            var account = await library.Accounts.FirstOrDefaultAsync(account => account.id == id && StaffRoles.Contains(account.role));
             if (account == null) throw new NotFoundException($"Account(id:{id}) not found");
             if (await library.Accounts.AnyAsync(account => account.login == updateAccount.login && account.id != id)) throw new BadRequestException($"Login({updateAccount.login}) already taken");
             account.login = updateAccount.login;
-            account.role = updateAccount.role;
+            account.role = updateAccount.role.ToLowerInvariant();
             if (!string.IsNullOrWhiteSpace(updateAccount.password)) account.passwordHash = hasher.Hash(updateAccount.password);
             await library.SaveChangesAsync();
 
@@ -85,7 +86,7 @@ namespace LibraryAPI.Services.API
             logger.LogInformation("Deleting account(id:{AccountId})", id);
 
             if (id == currentAccountId) throw new BadRequestException("Cannot delete yourself");
-            var account = await library.Accounts.FirstOrDefaultAsync(account => account.id == id && account.role != "user");
+            var account = await library.Accounts.FirstOrDefaultAsync(account => account.id == id && StaffRoles.Contains(account.role));
             if (account == null) throw new NotFoundException($"Account(id:{id}) not found");
             library.Accounts.Remove(account);
             await library.SaveChangesAsync();

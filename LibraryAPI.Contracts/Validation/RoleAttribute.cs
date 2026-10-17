@@ -6,13 +6,12 @@ namespace LibraryAPI.Contracts.Validation
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            if (value is string role)
-            {
-                role = role.ToLower();
-                if (role != "librarian" && role != "admin") return new ValidationResult("Role must be: librarian or admin");
-                return ValidationResult.Success;
-            }
-            return new ValidationResult("Role must not be null");
+            string role = value?.ToString();
+            if (string.IsNullOrEmpty(role)) return new ValidationResult("Role must not be null");
+            if (!string.Equals(role, "admin", StringComparison.OrdinalIgnoreCase) && !string.Equals(role, "librarian", StringComparison.OrdinalIgnoreCase))
+                    return new ValidationResult("Role must be: librarian or admin", new[] { validationContext.MemberName });
+
+            return ValidationResult.Success;
         }
     }
 }

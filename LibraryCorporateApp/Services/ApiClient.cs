@@ -57,7 +57,7 @@ namespace LibraryCorporateApp.Services
 
         public async Task<AuthorDTO> GetAuthorAsync(string name)
         {
-            var response = await httpClient.GetAsync($"api/authors/{name}");
+            var response = await httpClient.GetAsync($"api/authors/{Uri.EscapeDataString(name)}");
             if (!response.IsSuccessStatusCode) throw new ApiException(response.StatusCode, await response.Content.ReadAsStringAsync());
             return await response.Content.ReadFromJsonAsync<AuthorDTO>();
         }

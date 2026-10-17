@@ -1,4 +1,5 @@
-﻿using LibraryClientApp.Models;
+﻿using LibraryClientApp.Exceptions;
+using LibraryClientApp.Models;
 using LibraryClientApp.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
@@ -56,9 +57,14 @@ namespace LibraryClientApp.Middleware
                 tokenFile.Save(auth.refreshToken);
                 return auth.accessToken;
             }
-            catch
+            catch (ApiException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
             {
                 tokenFile.Clear();
+                storage.AccessToken = null;
+                return null;
+            }
+            catch
+            {
                 storage.AccessToken = null;
                 return null;
             }
