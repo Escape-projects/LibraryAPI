@@ -122,3 +122,7 @@ finally
 {
     await Log.CloseAndFlushAsync(); //Сбросить все буферы логов
 }
+
+// WebApplicationFactory<Program> из интеграционных тестов требует публичный тип.
+// Top-level statements делают сгенерированный Program внутренним.
+public partial class Program { }
