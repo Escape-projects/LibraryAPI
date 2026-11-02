@@ -31,25 +31,6 @@ services:
       retries: 5
       start_period: 10s
 
-  # RabbitMQ
-  rabbitmq:
-    image: rabbitmq:4-management
-    container_name: library-rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
-      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
-    healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 20s
-
   # API
   api:
     image: libraryapi:latest
@@ -64,17 +45,11 @@ services:
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=LibraryDB;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;
       - Redis__ConnectionString=redis:6379
       - JwtSettings__SecretKey=${JWT_SECRET_KEY}
-      - RabbitMq__Host=rabbitmq
-      - RabbitMq__UserName=${RABBITMQ_USER}
-      - RabbitMq__Password=${RABBITMQ_PASSWORD}
     depends_on:
       sqlserver:
         condition: service_healthy
       redis:
         condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
 
 volumes:
   sql_data:
-  rabbitmq_data:
