@@ -1,8 +1,8 @@
 # 📚 LibraryAPI
 
-[![CI](https://github.com/Escape-projects/LibraryAPI/actions/workflows/ci.yml/badge.svg)](https://github.com/Escape-projects/LibraryAPI/actions/workflows/ci.yml)
-![.NET](https://img.shields.io/badge/.NET-10-512BD4)
-![SQL Server](https://img.shields.io/badge/SQL%20Server-2022-CC2927)
+[![CI](https://github.com/Escape-projects/LibraryAPI/actions/workflows/ci.yml/badge.svg)](https://github.com/Escape-projects/LibraryAPI/actions/workflows/ci.yml)  
+![.NET](https://img.shields.io/badge/.NET-10-512BD4)  
+![SQL Server](https://img.shields.io/badge/SQL%20Server-2022-CC2927)  
 ![Redis](https://img.shields.io/badge/Redis-7-DC382D)
 
 REST API для библиотеки: книги и авторы с фильтрацией и пагинацией, аккаунты сотрудников с ролями, JWT-аутентификация с refresh-токенами, кэширование в Redis, 76 тестов (52 юнит-теста и 24 интеграционных) и запуск одной командой в Docker.
